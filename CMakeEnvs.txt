@@ -1,0 +1,4 @@
+TOOLCHAIN=C:/MounRiver/MounRiver_Studio2/resources/app/resources/win32/components/WCH/Toolchain/RISC-V Embedded GCC12/bin/riscv-wch-elf-
+TOOLCHAIN_INCLUDE=C:/MounRiver/MounRiver_Studio2/resources/app/resources/win32/components/WCH/Toolchain/RISC-V Embedded GCC12/riscv-wch-elf/include
+PROJECT_NAME=ch572-cmake
+CMAKE_BUILD_TYPE=debug

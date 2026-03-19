@@ -1,0 +1,4 @@
+TOOLCHAIN=/Users/Shared/MRS_Toolchain_MAC_V192/xpack-riscv-none-embed-gcc-8.2.0/bin/riscv-none-embed-
+TOOLCHAIN_INCLUDE=/Users/Shared/MRS_Toolchain_MAC_V192/xpack-riscv-none-embed-gcc-8.2.0/riscv-none-embed/include
+PROJECT_NAME=ch58x-cmake
+CMAKE_BUILD_TYPE=debug
