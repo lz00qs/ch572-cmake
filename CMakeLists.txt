@@ -45,11 +45,28 @@ project(${PROJECT_NAME} C CXX ASM)
 
 # 设置编译标准
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 # 设置编译选项
-add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99 -Os)
-add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
+add_compile_options(
+    -march=rv32imc_zba_zbb_zbc_zbs_xw
+    -mabi=ilp32
+    -mcmodel=medany
+    -msmall-data-limit=8
+    -mno-save-restore
+    -fmax-errors=20
+    -Os
+    -fmessage-length=0
+    -fsigned-char
+    -ffunction-sections
+    -fdata-sections
+    -fno-common
+    --param=highcode-gen-section-name=1
+    -g
+    $<$<COMPILE_LANGUAGE:C>:-std=gnu99>
+    $<$<COMPILE_LANGUAGE:ASM>:-x>
+    $<$<COMPILE_LANGUAGE:ASM>:assembler-with-cpp>
+)
 
 if (CMAKE_BUILD_TYPE STREQUAL "debug")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -O0") # 禁用优化
@@ -69,9 +86,6 @@ include_directories(
     ${TOOLCHAIN_INCLUDE}
     src/include
     BLE_LIB
-    HAL/include
-    LWNS
-    Profile/include
     RVMSIS
     StdPeriphDriver/inc
     USB_LIB)
@@ -81,8 +95,6 @@ file(
     GLOB_RECURSE
     SOURCES
     "src/*.c"
-    "HAL/*.c"
-    "Profile/*.c"
     "RVMSIS/*.c"
     "Startup/*.S"
     "StdPeriphDriver/*.c"
@@ -92,19 +104,32 @@ file(
 # 添加 link map 文件
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Ld/Link.ld)
 add_link_options(
-    -march=rv32imac
+    -march=rv32imc_zba_zbb_zbc_zbs_xw
     -mabi=ilp32
+    -mcmodel=medany
+    -msmall-data-limit=8
+    -mno-save-restore
+    -fmax-errors=20
+    -Os
+    -fmessage-length=0
+    -fsigned-char
+    -ffunction-sections
+    -fdata-sections
+    -fno-common
+    --param=highcode-gen-section-name=1
+    -g
+    -T${LINKER_SCRIPT}
     -nostartfiles
-    -Xlinker --gc-sections
-    -Wl,--print-memory-usage
-    -Wl,-Map,${PROJECT_NAME}.map
+    -Xlinker
+    --gc-sections
+    -Xlinker
+    -Wl,--print-memory-usage,-Map,${PROJECT_NAME}.map
     --specs=nano.specs
     --specs=nosys.specs
 )
-add_link_options(-T ${LINKER_SCRIPT})
 
 # 生成可执行文件
-add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+add_executable(${PROJECT_NAME}.elf ${SOURCES})
 
 # Link the static libraries
 target_link_libraries(
